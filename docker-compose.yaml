@@ -1,0 +1,27 @@
+version: '3.9'
+
+volumes:
+  db-data-library:
+    driver: local
+
+services:
+
+#  library-api:
+#    build: ./library
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db_library
+
+  db_library:
+    image: postgres:13.3
+    container_name: ${PG_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5438:5432"
+    volumes:
+      - db-data-library:/var/lib/postgresql/data
+    restart: unless-stopped

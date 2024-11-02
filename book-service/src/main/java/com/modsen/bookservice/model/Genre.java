@@ -1,4 +1,4 @@
-package com.modsen.library.model;
+package com.modsen.bookservice.model;
 
 public enum Genre {
     FICTION,
