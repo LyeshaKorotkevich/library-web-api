@@ -5,6 +5,7 @@ import com.modsen.bookservice.dto.response.BookResponse;
 import com.modsen.bookservice.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {AuthorMapper.class})
 public interface BookMapper {

@@ -13,12 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AuthorMapperTest {
 
-    private AuthorMapper authorMapper;
+    private final AuthorMapper authorMapper = Mappers.getMapper(AuthorMapper.class);
+
     private AuthorTestData authorTestData;
 
     @BeforeEach
     void setUp() {
-        authorMapper = Mappers.getMapper(AuthorMapper.class);
         authorTestData = AuthorTestData.builder().build();
     }
 

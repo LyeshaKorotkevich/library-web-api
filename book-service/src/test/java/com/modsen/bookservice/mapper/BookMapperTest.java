@@ -6,19 +6,28 @@ import com.modsen.bookservice.dto.response.AuthorResponse;
 import com.modsen.bookservice.dto.response.BookResponse;
 import com.modsen.bookservice.model.Author;
 import com.modsen.bookservice.model.Book;
+import com.modsen.bookservice.util.AuthorTestData;
 import com.modsen.bookservice.util.BookTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class BookMapperTest {
 
-    @Autowired
-    private BookMapper bookMapper;
+    @Mock
+    private AuthorMapper authorMapper; // Mocked AuthorMapper
+
+    @InjectMocks
+    private BookMapper bookMapper = Mappers.getMapper(BookMapper.class);
+
     private BookTestData bookTestData;
 
     @BeforeEach
@@ -31,6 +40,10 @@ class BookMapperTest {
         // given
         Book book = bookTestData.getBook();
 
+        Author author = book.getAuthor();
+        AuthorResponse authorResponseMock = AuthorTestData.builder().build().getResponse();
+        when(authorMapper.toResponse(author)).thenReturn(authorResponseMock);
+
         // when
         BookResponse bookResponse = bookMapper.toResponse(book);
 
@@ -42,7 +55,7 @@ class BookMapperTest {
         assertThat(bookResponse.description()).isEqualTo(book.getDescription());
 
         AuthorResponse authorResponse = bookResponse.author();
-        Author author = book.getAuthor();
+        assertThat(authorResponse).isNotNull();
         assertThat(authorResponse.id()).isEqualTo(author.getId());
         assertThat(authorResponse.name()).isEqualTo(author.getName());
         assertThat(authorResponse.surname()).isEqualTo(author.getSurname());
@@ -54,6 +67,15 @@ class BookMapperTest {
         // given
         BookRequest bookRequest = bookTestData.getRequest();
 
+        AuthorRequest authorRequest = bookRequest.author();
+        Author authorMock = AuthorTestData.builder()
+                .withName(authorRequest.name())
+                .withSurname(authorRequest.surname())
+                .withBirthDate(authorRequest.birthDate())
+                .build().getAuthor();
+
+        when(authorMapper.toEntity(authorRequest)).thenReturn(authorMock);
+
         // when
         Book book = bookMapper.toEntity(bookRequest);
 
@@ -64,7 +86,7 @@ class BookMapperTest {
         assertThat(book.getDescription()).isEqualTo(bookRequest.description());
 
         Author author = book.getAuthor();
-        AuthorRequest authorRequest = bookRequest.author();
+        assertThat(author).isNotNull();
         assertThat(author.getName()).isEqualTo(authorRequest.name());
         assertThat(author.getSurname()).isEqualTo(authorRequest.surname());
         assertThat(author.getBirthDate()).isEqualTo(authorRequest.birthDate());

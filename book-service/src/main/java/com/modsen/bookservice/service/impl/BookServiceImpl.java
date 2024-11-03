@@ -10,6 +10,7 @@ import com.modsen.bookservice.repository.BookRepository;
 import com.modsen.bookservice.service.AuthorService;
 import com.modsen.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final BookMapper bookMapper;
+
+    private final KafkaTemplate<String, Long> kafkaTemplate;
 
     @Override
     public List<BookResponse> getAllBooks() {
@@ -53,11 +56,15 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookResponse addBook(BookRequest bookRequest) {
         Book book = bookMapper.toEntity(bookRequest);
-
         Author author = authorService.getOrCreateAuthor(bookRequest.author());
-
         book.setAuthor(author);
-        return bookMapper.toResponse(bookRepository.save(book));
+
+        Book savedBook = bookRepository.save(book);
+        Long bookId = savedBook.getId();
+
+        kafkaTemplate.send("book-topic", bookId);
+
+        return bookMapper.toResponse(savedBook);
     }
 
     @Override
