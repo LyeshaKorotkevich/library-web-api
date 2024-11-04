@@ -62,3 +62,5 @@
 ![img.png](images/img.png)
 
 ### auth-service
+
+![img.png](images/img_2.png)
