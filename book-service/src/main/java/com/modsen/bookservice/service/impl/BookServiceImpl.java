@@ -10,6 +10,8 @@ import com.modsen.bookservice.repository.BookRepository;
 import com.modsen.bookservice.service.AuthorService;
 import com.modsen.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,10 @@ public class BookServiceImpl implements BookService {
     private final KafkaTemplate<String, Long> kafkaTemplate;
 
     @Override
-    public List<BookResponse> getAllBooks() {
+    public Page<BookResponse> getAllBooks(Pageable pageable) {
         return bookRepository
-                .findAll()
-                .stream()
-                .map(bookMapper::toResponse)
-                .toList();
+                .findAll(pageable)
+                .map(bookMapper::toResponse);
     }
 
     @Override

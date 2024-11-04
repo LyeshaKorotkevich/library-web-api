@@ -5,6 +5,11 @@ echo "Stopping containers..."
 docker-compose down
 
 # Сборка каждого микросервиса
+echo "Building auth-service..."
+cd auth-service || { echo "Could not change directory to auth-service"; exit 1; }
+./gradlew build || { echo "Auth-service build failed"; exit 1; }
+cd ..
+
 echo "Building library-service..."
 cd library-service || { echo "Could not change directory to library-service"; exit 1; }
 ./gradlew build || { echo "Library-service build failed"; exit 1; }

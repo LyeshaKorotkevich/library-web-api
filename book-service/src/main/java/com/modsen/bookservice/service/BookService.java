@@ -2,13 +2,12 @@ package com.modsen.bookservice.service;
 
 import com.modsen.bookservice.dto.request.BookRequest;
 import com.modsen.bookservice.dto.response.BookResponse;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
 
-    List<BookResponse> getAllBooks();
+    Page<BookResponse> getAllBooks(Pageable pageable);
 
     BookResponse getBookById(Long id);
 

@@ -16,6 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
@@ -58,18 +62,20 @@ class BookServiceImplTest {
     }
 
     @Test
-    void getAllBooks_ShouldReturnListOfBooks() {
+    void getAllBooks_ShouldReturnPageOfBooks() {
         // given
-        when(bookRepository.findAll()).thenReturn(List.of(book));
+        Pageable pageable = PageRequest.of(0, 10);
+        when(bookRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(book)));
         when(bookMapper.toResponse(book)).thenReturn(bookResponse);
 
         // when
-        List<BookResponse> result = bookService.getAllBooks();
+        Page<BookResponse> result = bookService.getAllBooks(pageable);
 
         // then
-        assertEquals(1, result.size());
-        assertEquals(bookResponse, result.get(0));
-        verify(bookRepository).findAll();
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
+        assertEquals(bookResponse, result.getContent().get(0));
+        verify(bookRepository).findAll(pageable);
     }
 
     @Test

@@ -5,10 +5,11 @@ import com.modsen.libraryservice.model.LibraryBook;
 import com.modsen.libraryservice.repository.LibraryBookRepository;
 import com.modsen.libraryservice.service.LibraryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class LibraryServiceImpl implements LibraryService {
     private final LibraryBookRepository libraryBookRepository;
 
     @Override
-    public List<LibraryBook> getAvailableBooks() {
-        return libraryBookRepository.findAllByTakenAtIsNull();
+    public Page<LibraryBook> getAvailableBooks(Pageable pageable) {
+        return libraryBookRepository.findAllByTakenAtIsNull(pageable);
     }
 
     @Override

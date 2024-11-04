@@ -1,13 +1,15 @@
 package com.modsen.libraryservice.service;
 
 import com.modsen.libraryservice.model.LibraryBook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LibraryService {
 
-    List<LibraryBook> getAvailableBooks();
+    Page<LibraryBook> getAvailableBooks(Pageable pageable);
 
     LibraryBook addLibraryBook(Long bookId);
 
