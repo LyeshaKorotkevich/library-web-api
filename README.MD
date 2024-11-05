@@ -49,9 +49,9 @@
 
 4. Документация API  
    Эндпоинты API задокументированы с помощью Swagger. После запуска приложения вы можете получить доступ к документации по адресу:  
-   http://localhost:8080/swagger - book-service  
-   http://localhost:8081/swagger - library-service  
-   http://localhost:8082/swagger - auth-service
+   http://localhost:8080/swagger-ui/index.html#/ - book-service  
+   http://localhost:8081/swagger-ui/index.html#/ - library-service  
+   http://localhost:8082/swagger-ui/index.html#/ - auth-service
 
 ## Покрытие тестами
 

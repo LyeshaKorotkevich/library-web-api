@@ -17,15 +17,37 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * JWT Authentication Filter for processing incoming requests.
+ * This filter checks for a JWT in the Authorization header,
+ * validates it, and sets the authentication in the SecurityContext.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    /**
+     * Utility class for JWT token operations.
+     */
     private final JwtTokenUtil jwtTokenUtil;
 
+    /**
+     * Service for loading user-specific data during authentication.
+     */
     private final UserDetailsService userDetailsService;
 
-
+    /**
+     * Performs the filtering of requests to extract and validate JWT tokens.
+     *
+     * <p>If a valid token is found, it retrieves the associated user details
+     * and sets the authentication in the security context.</p>
+     *
+     * @param request the incoming HTTP request
+     * @param response the HTTP response
+     * @param filterChain the filter chain to continue the request processing
+     * @throws ServletException if an error occurs during the filter execution
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -52,11 +74,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Extracts the JWT token from the Authorization header of the request.
+     *
+     * @param request the HTTP request containing the Authorization header
+     * @return the extracted token, or null if not present
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
 
         return null;

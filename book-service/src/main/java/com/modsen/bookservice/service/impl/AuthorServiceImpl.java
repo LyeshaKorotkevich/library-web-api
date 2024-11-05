@@ -8,6 +8,10 @@ import com.modsen.bookservice.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the AuthorService interface.
+ * Provides methods for managing authors in the book service application.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {

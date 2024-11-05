@@ -11,6 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Implementation of the {@link LibraryService} interface.
+ *
+ * This service handles the management of library books, including retrieving available books,
+ * adding new books, and registering the borrowing and returning of books.
+ */
 @Service
 @RequiredArgsConstructor
 public class LibraryServiceImpl implements LibraryService {

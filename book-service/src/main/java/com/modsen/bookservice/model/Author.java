@@ -13,6 +13,9 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.Set;
 
+/**
+ * Represents an author of books in the system.
+ */
 @Data
 @Entity
 @Table(name = "authors", uniqueConstraints = {
@@ -20,19 +23,37 @@ import java.util.Set;
 })
 public class Author {
 
+    /**
+     * The unique identifier for the author.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * The author's first name.
+     * Cannot be null.
+     */
     @Column(nullable = false)
     private String name;
 
+    /**
+     * The author's surname.
+     * Cannot be null.
+     */
     @Column(nullable = false)
     private String surname;
 
+    /**
+     * The author's date of birth.
+     * Cannot be null.
+     */
     @Column(nullable = false)
     private LocalDate birthDate;
 
+    /**
+     * The set of books written by the author.
+     */
     @OneToMany(mappedBy = "author")
     private Set<Book> books;
 }

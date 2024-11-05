@@ -24,6 +24,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Filter for JWT authentication that validates the JWT token and sets the authentication context.
+ * It retrieves user details from the authentication service based on the token's username.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -31,6 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final RestTemplate restTemplate;
 
+    /**
+     * Filters requests to validate the JWT token.
+     *
+     * @param request  the HTTP request
+     * @param response the HTTP response
+     * @param filterChain the filter chain for further processing of the request
+     * @throws ServletException if an error occurs during the filter process
+     * @throws IOException      if an input or output error occurs
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -65,6 +78,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Extracts the JWT token from the Authorization header of the request.
+     *
+     * @param request the HTTP request
+     * @return the extracted JWT token, or null if no valid token is found
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
@@ -75,6 +94,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
+    /**
+     * Converts a UserResponse DTO to a UserDetails object.
+     *
+     * @param userResponse the UserResponse containing user information
+     * @return a UserDetails object representing the user
+     */
     private UserDetails toUserDetails(UserResponse userResponse) {
         return new User(
                 userResponse.username(),

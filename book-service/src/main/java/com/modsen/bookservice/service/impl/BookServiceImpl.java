@@ -18,6 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Implementation of the BookService interface.
+ * Provides methods for managing books in the book service application.
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

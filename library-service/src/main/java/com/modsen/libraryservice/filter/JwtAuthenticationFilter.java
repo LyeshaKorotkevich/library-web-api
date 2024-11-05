@@ -1,6 +1,5 @@
 package com.modsen.libraryservice.filter;
 
-
 import com.modsen.libraryservice.dto.response.UserResponse;
 import com.modsen.libraryservice.security.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
@@ -25,13 +24,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Filter for JWT authentication in the application.
+ *
+ * This filter intercepts incoming requests to validate the JWT token present in the
+ * Authorization header, fetches the associated user details, and sets the authentication
+ * in the Security context if the token is valid.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
+
     private final RestTemplate restTemplate;
 
+    /**
+     * This method is invoked for every request to filter the incoming requests.
+     * It checks for the presence of a JWT token, validates it, and retrieves
+     * user details from the authentication service.
+     *
+     * @param request  the incoming HTTP request
+     * @param response the outgoing HTTP response
+     * @param filterChain the filter chain to pass the request and response
+     * @throws ServletException if a servlet-related error occurs
+     * @throws IOException      if an I/O error occurs during the request processing
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -66,6 +84,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Retrieves the JWT token from the Authorization header of the request.
+     *
+     * @param request the incoming HTTP request
+     * @return the JWT token as a String, or null if not found
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
@@ -76,6 +100,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
+    /**
+     * Converts a UserResponse object to a UserDetails object for Spring Security.
+     *
+     * @param userResponse the UserResponse containing user information
+     * @return a UserDetails object representing the authenticated user
+     */
     private UserDetails toUserDetails(UserResponse userResponse) {
         return new User(
                 userResponse.username(),
